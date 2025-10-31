@@ -11,11 +11,13 @@ async function fetchTeraBox(inputUrl) {
     const shortUrl = extractShortUrl(inputUrl);
     if (!shortUrl) throw new Error("Invalid Terabox URL or short code.");
 
+    const apiBase = "https://terabox.hnn.workers.dev";
+
+    // Fetch file info
     const infoRes = await axios.get(
-      `https://terabox.hnn.workers.dev/api/get-info-new?shorturl=${encodeURIComponent(shortUrl)}`,
+      `${apiBase}/api/get-info-new?shorturl=${encodeURIComponent(shortUrl)}`,
       {
-        headers: getHeaders(),
-        maxBodyLength: Infinity,
+        headers: getHeaders(apiBase),
       }
     );
 
@@ -34,20 +36,26 @@ async function fetchTeraBox(inputUrl) {
       fs_id: file.fs_id,
     };
 
+    // Fetch download link
     const downloadRes = await axios.post(
-      "https://terabox.hnn.workers.dev/api/get-download",
-      JSON.stringify(payload),
+      `${apiBase}/api/get-download`,
+      payload,
       {
         headers: {
-          ...getHeaders(),
-          "content-type": "application/json",
-          origin: "https://terabox.hnn.workers.dev",
+          ...getHeaders(apiBase),
+          "Content-Type": "application/json",
         },
-        maxBodyLength: Infinity,
       }
     );
 
-    return downloadRes.data;
+    const data = downloadRes.data;
+    if (!data.ok) throw new Error("Failed to get download URL from Terabox.");
+
+    return {
+      filename: file.server_filename,
+      size: file.size,
+      downloadUrl: data.downloadLink || data.url || data.link,
+    };
   } catch (error) {
     throw new Error(`Terabox API request failed: ${error.message}`);
   }
@@ -55,39 +63,28 @@ async function fetchTeraBox(inputUrl) {
 
 /**
  * Extract shorturl from full Terabox link or return if short code provided.
- * @param {string} input
- * @returns {string|null}
  */
 function extractShortUrl(input) {
-  try {
-    if (/^[A-Za-z0-9_-]+$/.test(input)) return input;
-    const match = input.match(/(?:\/s\/|shorturl=)([A-Za-z0-9_-]+)/i);
-    return match ? match[1] : null;
-  } catch {
-    return null;
-  }
+  if (/^[A-Za-z0-9_-]+$/.test(input)) return input;
+  const match = input.match(/(?:\/s\/|shorturl=)([A-Za-z0-9_-]+)/i);
+  return match ? match[1] : null;
 }
 
 /**
- * These are the common headers used in all API requests.
- * I've created this function to make it easier to modify headers in one place UwU.
+ * Generate browser-like headers to bypass 403s.
  */
-function getHeaders() {
+function getHeaders(origin) {
   return {
-    accept: "*/*",
-    "accept-language": "en-US,en;q=0.5",
-    dnt: "1",
-    priority: "u=1, i",
-    referer: "https://terabox.hnn.workers.dev/",
-    "sec-ch-ua": '"Chromium";v="142", "Brave";v="142", "Not_A Brand";v="99"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-origin",
-    "sec-gpc": "1",
-    "user-agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    Accept: "application/json, text/plain, */*",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Cache-Control": "no-cache",
+    Origin: origin,
+    Referer: origin + "/",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-origin",
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
   };
 }
 
