@@ -12,7 +12,13 @@ Download media from LinkedIn,Threads, Reddit, Facebook, Instagram, TikTok, YouTu
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=milancodess/universalDownloader&type=Date)](https://www.star-history.com/#milancodess/universalDownloader&Date)
+<a href="https://www.star-history.com/?repos=milancodess%2FuniversalDownloader&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=milancodess/universalDownloader&type=date&theme=dark&legend=top-left&sealed_token=OjeWJJohuJbxfX1G52tMU7CDI9ZowhfKPlR2sZhfZBKOlyIQg7CA05qrvUvVxiCrUW4j1i1qqoZYkgrUxRJ2GoXecx_UQE1xmF_ZZy5UfF6fMRKP3N0vyg" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=milancodess/universalDownloader&type=date&legend=top-left&sealed_token=OjeWJJohuJbxfX1G52tMU7CDI9ZowhfKPlR2sZhfZBKOlyIQg7CA05qrvUvVxiCrUW4j1i1qqoZYkgrUxRJ2GoXecx_UQE1xmF_ZZy5UfF6fMRKP3N0vyg" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=milancodess/universalDownloader&type=date&legend=top-left&sealed_token=OjeWJJohuJbxfX1G52tMU7CDI9ZowhfKPlR2sZhfZBKOlyIQg7CA05qrvUvVxiCrUW4j1i1qqoZYkgrUxRJ2GoXecx_UQE1xmF_ZZy5UfF6fMRKP3N0vyg" />
+ </picture>
+</a>
 
 ---
 
